@@ -1,0 +1,5 @@
+telethon>=1.28.0
+flask>=2.3.0
+python-dotenv>=1.0.0
+asyncio
+pathlib
