@@ -12,6 +12,14 @@ A Python application that automatically downloads files from a Telegram chat and
 - **Download Management**: Start, stop, and delete downloads from the web interface
 - **Persistent State**: Maintains download history and state across restarts
 
+## Preview
+
+### Web Dashboard
+![Dashboard Preview](screenshots/Dashboard.png)
+
+### Telegram Integration
+![Telegram Preview](screenshots/Telegram.png)
+
 ## Project Structure
 
 ```
@@ -182,6 +190,18 @@ Check `logs/telegram_downloader.log` for detailed error messages and debugging i
 4. Commit your changes: `git commit -m "Add feature"`
 5. Push to the branch: `git push origin feature-name`
 6. Submit a pull request
+
+## Screenshots
+
+### Web Dashboard
+The web dashboard provides a comprehensive view of all downloads with real-time progress tracking, speed monitoring, and download management capabilities.
+
+![Dashboard](screenshots/Dashboard.png)
+
+### Telegram Integration
+The application integrates seamlessly with Telegram, providing status updates directly in the chat interface.
+
+![Telegram Integration](screenshots/Telegram.png)
 
 ## License
 
