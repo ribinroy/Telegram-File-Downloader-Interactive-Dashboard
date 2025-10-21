@@ -1,18 +1,306 @@
 # Telegram Downloader
 
-A Python application that automatically downloads files from a Telegram chat and provides a web dashboard to monitor download progress.
+A Python application that automatically downloads files from a Telegram chat and provides a real-time web dashboard to monitor download progress.
 
-## Features
+---
 
-- **Automatic Downloads**: Automatically detects and downloads files from a specified Telegram chat
-- **Real-time Progress**: Live download progress with speed and ETA information
-- **Web Dashboard**: Beautiful web interface to monitor downloads
-- **File Organization**: Automatically organizes files into folders (Images, Videos, Documents)
-- **Retry Mechanism**: Built-in retry logic for failed downloads
-- **Download Management**: Start, stop, and delete downloads from the web interface
-- **Persistent State**: Maintains download history and state across restarts
+## 🚀 Features
 
-## Preview
+- **Automatic Downloads**: Detects and downloads files automatically from a chosen Telegram chat
+- **Real-time Progress**: Live progress, speed, and ETA tracking
+- **Web Dashboard**: Clean web UI for monitoring downloads
+- **File Organization**: Automatically sorts files into folders (`Images`, `Videos`, `Documents`)
+- **Retry Mechanism**: Automatic retry logic for failed downloads
+- **Download Management**: Stop, retry, or delete downloads from the dashboard
+- **Persistent State**: Keeps download history across restarts
+- **Chat Reactions**: Automatically reacts in Telegram with ⬇️ ✅ ❌ to indicate download state
+
+---
+
+## 🧩 Project Structure
+
+```
+telegram_downloader/
+├── src/
+│   ├── config/             # Configuration and environment management
+│   ├── telegram_handler/   # Telegram client and downloader logic
+│   ├── web_app/            # Flask web application
+│   └── utils/              # Helper utilities
+├── downloads/              # Auto-created download directory
+├── logs/                   # Log files
+├── main.py                 # Main entry point
+├── requirements.txt        # Dependencies
+└── README.md               # This file
+```
+
+---
+
+## 🧰 Prerequisites
+
+- **Python 3.8+**
+- **Telegram API credentials**
+- Internet access
+
+---
+
+## 🧑‍💻 Step 1: Get Telegram API Credentials
+
+To use the Telegram API, you must create a **Telegram application** and get an **API ID** and **API HASH**.
+
+### 1. Go to [https://my.telegram.org](https://my.telegram.org)
+
+- Log in with your Telegram account.
+
+### 2. Click on **API Development Tools**
+
+- You’ll be prompted to create a new app.
+
+### 3. Fill out the form:
+
+| Field      | Example               |
+| ---------- | --------------------- |
+| App title  | `Telegram Downloader` |
+| Short name | `tgdloader`           |
+| Platform   | `Desktop`             |
+
+After submission, you’ll see your **API ID** and **API HASH** — keep them safe.  
+You’ll use these in your `.env` file.
+
+---
+
+## ⚙️ Step 2: Installation
+
+### 🪟 **Windows Setup**
+
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/telegram_downloader.git
+cd telegram_downloader
+
+# Create virtual environment (optional but recommended)
+python -m venv venv
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+Then copy the environment file:
+
+```bash
+copy .env.example .env
+```
+
+Edit `.env` in Notepad and fill in:
+
+```bash
+API_ID=your_api_id_here
+API_HASH=your_api_hash_here
+CHAT_ID=-1001234567890
+WEB_PORT=4444
+DOWNLOAD_DIR=C:\Users\<you>\Downloads\Telegram
+```
+
+Start the app:
+
+```bash
+python main.py
+```
+
+Then visit:  
+➡️ **http://localhost:4444**
+
+---
+
+### 🍎 **macOS Setup**
+
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/telegram_downloader.git
+cd telegram_downloader
+
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip3 install -r requirements.txt
+```
+
+Copy `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Edit with:
+
+```bash
+nano .env
+```
+
+Start the app:
+
+```bash
+python3 main.py
+```
+
+Then open **http://localhost:4444** in your browser.
+
+---
+
+### 🐧 **Ubuntu / Linux Setup**
+
+```bash
+sudo apt update && sudo apt install -y python3 python3-pip python3-venv git
+git clone https://github.com/yourusername/telegram_downloader.git
+cd telegram_downloader
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Copy `.env` and edit:
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Fill your Telegram credentials and paths.
+
+Start:
+
+```bash
+python3 main.py
+```
+
+Access the dashboard:  
+➡️ **http://localhost:4444**
+
+---
+
+## ⚙️ Step 3: Configure `.env`
+
+```bash
+API_ID=12345678
+API_HASH=abcd1234efgh5678ijkl
+CHAT_ID=-1001234567890
+DOWNLOAD_DIR=/mnt/Downloads/Telegram
+WEB_PORT=4444
+MAX_RETRIES=6
+```
+
+### Notes:
+
+- `CHAT_ID`: Use a **negative number** for group or channel chats
+- To get your chat ID:
+  - Forward any message from the chat to [@userinfobot](https://t.me/userinfobot)
+  - It will return something like: `Chat ID: -1001234567890`
+
+---
+
+## 🖥️ Step 4: Running as a Background Service (Linux only)
+
+To auto-run this on boot:
+
+Create a service file:
+
+```bash
+sudo nano /etc/systemd/system/telegram_downloader.service
+```
+
+Paste:
+
+```ini
+[Unit]
+Description=Telegram Downloader Service
+After=network.target
+
+[Service]
+User=hs
+WorkingDirectory=/home/hs/telegram_downloader
+ExecStart=/home/hs/telegram_downloader/venv/bin/python main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable telegram_downloader
+sudo systemctl start telegram_downloader
+sudo journalctl -u telegram_downloader -f
+```
+
+---
+
+## 🌐 Web Dashboard
+
+Access the dashboard at:
+
+👉 [http://localhost:4444](http://localhost:4444)
+
+### Features:
+
+- Live download progress updates
+- Pause/Stop/Delete controls
+- Search filter using URL query (`?search=keyword`)
+- Download stats summary (speed, pending bytes, etc.)
+
+---
+
+## 📂 File Organization
+
+Files are automatically sorted into:
+
+```
+Downloads/
+├── Images/
+├── Videos/
+└── Documents/
+```
+
+---
+
+## 🧠 Troubleshooting
+
+| Issue                     | Cause               | Fix                                              |
+| ------------------------- | ------------------- | ------------------------------------------------ |
+| `Invalid API credentials` | Wrong API ID/HASH   | Check at my.telegram.org                         |
+| `Chat not found`          | Incorrect CHAT_ID   | Ensure bot has access; use negative for groups   |
+| `Permission denied`       | No write permission | `chmod -R 777 downloads` (or adjust user rights) |
+| Downloads not updating    | Long Telegram delay | Check logs or restart the app                    |
+
+View logs:
+
+```bash
+tail -f logs/telegram_downloader.log
+```
+
+---
+
+## 🧑‍🔬 Development
+
+### Modules
+
+- `src/telegram_handler/`: Telethon client, reactions, retries
+- `src/web_app/`: Flask API, HTML template
+- `src/utils/`: Size/time formatters
+- `src/config/`: Environment + constants
+
+### To Add Features
+
+1. Add new file handler in `telegram_handler/`
+2. Update dashboard HTML for new buttons
+3. Add REST endpoint in `web_app/`
+
+---
+
+## 💡 Example Screenshot Previews
 
 ### Web Dashboard
 
@@ -20,214 +308,32 @@ A Python application that automatically downloads files from a Telegram chat and
 
 ### Telegram Integration
 
-![Telegram Preview](screenshots/Telegram.png)
-![Telegram Preview Downloading](screenshots/Screenshot%202025-10-22%20at%2000.03.47.png)
-![Telegram Preview Stopped](screenshots/Screenshot%202025-10-22%20at%2000.03.59.png)
+![Telegram Reaction Examples](screenshots/Telegram.png)
+![Downloading](screenshots/Screenshot%202025-10-22%20at%2000.03.47.png)
+![Stopped](screenshots/Screenshot%202025-10-22%20at%2000.03.59.png)
 
-## Project Structure
+---
 
-```
-telegram_downloader/
-├── src/
-│   ├── config/          # Configuration settings
-│   ├── telegram_handler/ # Telegram client and download logic
-│   ├── web_app/         # Flask web application
-│   └── utils/           # Utility functions
-├── downloads/           # Downloaded files (auto-created)
-├── logs/               # Log files (auto-created)
-├── main.py             # Main entry point
-├── requirements.txt    # Python dependencies
-└── README.md          # This file
-```
+## 🪪 License
 
-## Prerequisites
+Licensed under the [MIT License](LICENSE).
 
-1. **Python 3.7+** installed on your system
-2. **Telegram API Credentials**:
-   - Go to [my.telegram.org](https://my.telegram.org)
-   - Log in with your phone number
-   - Go to "API development tools"
-   - Create a new application to get `API_ID` and `API_HASH`
+---
 
-## Installation
+## ❤️ Support & Contributions
 
-1. **Clone the repository**:
+1. Check [Issues](https://github.com/yourusername/telegram_downloader/issues)
+2. Open a new issue if not listed
+3. PRs welcome — please follow the coding style and test locally
 
-   ```bash
-   git clone https://github.com/yourusername/telegram_downloader.git
-   cd telegram_downloader
-   ```
+---
 
-2. **Install dependencies**:
+## 🧾 Changelog
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+### **v1.0.0**
 
-   Or use the setup script:
-
-   ```bash
-   python setup.py
-   ```
-
-3. **Configure the application**:
-   Copy the example environment file and update with your values:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Then edit `.env` and update the following values:
-
-   ```bash
-   API_ID=your_api_id_here
-   API_HASH=your_api_hash_here
-   CHAT_ID=your_chat_id_here  # Negative number for groups/channels
-   ```
-
-   Or use the interactive setup script:
-
-   ```bash
-   python setup_env.py
-   ```
-
-4. **Get Chat ID**:
-   - Add your bot to the chat or forward a message from the chat to @userinfobot
-   - The chat ID will be displayed (use negative number for groups)
-
-## Usage
-
-1. **Start the application**:
-
-   ```bash
-   python main.py
-   ```
-
-2. **Access the web dashboard**:
-   Open your browser and go to `http://localhost:4444`
-
-3. **Send files to Telegram**:
-   Send any file to the configured chat, and it will automatically start downloading
-
-## Configuration
-
-### Basic Configuration
-
-Edit `.env` file to customize:
-
-- `API_ID` and `API_HASH`: Your Telegram API credentials
-- `CHAT_ID`: The chat ID to monitor for files
-- `WEB_PORT`: Port for the web dashboard (default: 4444)
-- `DOWNLOAD_DIR`: Directory to save downloaded files
-- `MAX_RETRIES`: Maximum retry attempts for failed downloads
-
-### Advanced Configuration
-
-- **Download Directory**: Change `DOWNLOAD_DIR` in `src/config/__init__.py` to your preferred location
-- **Web Interface**: Modify `WEB_HOST` and `WEB_PORT` in `.env` for different network access
-- **Logging**: Adjust log level and file location in `main.py`
-
-## Web Dashboard Features
-
-- **Real-time Status**: See download progress, speed, and ETA
-- **File Management**: Retry failed downloads, stop active downloads, delete entries
-- **Search**: Filter downloads by filename
-- **Statistics**: View total downloaded size, pending bytes, and overall speed
-
-## File Organization
-
-Files are automatically organized into folders:
-
-- **Images**: Files with image MIME types
-- **Videos**: Files with video MIME types
-- **Documents**: All other file types
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Invalid API credentials"**:
-
-   - Verify your `API_ID` and `API_HASH` are correct
-   - Make sure you've created an application at my.telegram.org
-
-2. **"Chat not found"**:
-
-   - Verify the `CHAT_ID` is correct
-   - Ensure the bot/user has access to the chat
-   - Use negative numbers for group chats
-
-3. **"Permission denied"**:
-
-   - Check file permissions for the download directory
-   - Ensure the application has write access
-
-4. **Downloads not starting**:
-   - Check the logs in `logs/telegram_downloader.log`
-   - Verify the chat is being monitored correctly
-
-### Logs
-
-Check `logs/telegram_downloader.log` for detailed error messages and debugging information.
-
-## Development
-
-### Project Structure
-
-- `src/config/`: Configuration management
-- `src/telegram_handler/`: Telegram client and download logic
-- `src/web_app/`: Flask web application and API endpoints
-- `src/utils/`: Utility functions for file operations and formatting
-
-### Adding Features
-
-1. **New Download Sources**: Extend `TelegramDownloader` class
-2. **Web Interface**: Modify `WebApp` class and HTML template
-3. **File Processing**: Add handlers in `utils` module
-4. **Configuration**: Add new settings in `config` module
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and test thoroughly
-4. Commit your changes: `git commit -m "Add feature"`
-5. Push to the branch: `git push origin feature-name`
-6. Submit a pull request
-
-## Screenshots
-
-### Web Dashboard
-
-The web dashboard provides a comprehensive view of all downloads with real-time progress tracking, speed monitoring, and download management capabilities.
-
-![Dashboard](screenshots/Dashboard.png)
-
-### Telegram Integration
-
-The application integrates seamlessly with Telegram, providing status updates directly in the chat interface.
-
-![Telegram Integration](screenshots/Telegram.png)
-![Telegram Preview Downloading](screenshots/Screenshot%202025-10-22%20at%2000.03.47.png)
-![Telegram Preview Stopped](screenshots/Screenshot%202025-10-22%20at%2000.03.59.png)
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](https://github.com/yourusername/telegram_downloader/issues) page
-2. Create a new issue with detailed information
-3. Include logs and configuration details (without sensitive information)
-
-## Changelog
-
-### Version 1.0.0
-
-- Initial release with modular architecture
-- Automatic file downloads from Telegram
-- Web dashboard with real-time monitoring
-- File organization and management features
+- Initial release
+- Automatic Telegram file downloads
+- Flask dashboard with live tracking
+- File organization and persistent state
+- Telegram message reactions (⬇️ ✅ ❌)
