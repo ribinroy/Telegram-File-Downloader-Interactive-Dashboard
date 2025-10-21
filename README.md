@@ -21,6 +21,8 @@ A Python application that automatically downloads files from a Telegram chat and
 ### Telegram Integration
 
 ![Telegram Preview](screenshots/Telegram.png)
+![Telegram Preview Downloading](screenshots/Screenshot%202025-10-22%20at%2000.03.47.png)
+![Telegram Preview Stopped](screenshots/Screenshot%202025-10-22%20at%2000.03.59.png)
 
 ## Project Structure
 
@@ -206,6 +208,8 @@ The web dashboard provides a comprehensive view of all downloads with real-time 
 The application integrates seamlessly with Telegram, providing status updates directly in the chat interface.
 
 ![Telegram Integration](screenshots/Telegram.png)
+![Telegram Preview Downloading](screenshots/Screenshot%202025-10-22%20at%2000.03.47.png)
+![Telegram Preview Stopped](screenshots/Screenshot%202025-10-22%20at%2000.03.59.png)
 
 ## License
 
